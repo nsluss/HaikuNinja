@@ -36,7 +36,20 @@ app.use(function(err, req, res, next) {
 
 
 
-app.set('port', process.env.PORT || 3000);
+var arg, ind, portSet, _i, _ref;
+
+for (ind = _i = 0, _ref = process.argv.length; 0 <= _ref ? _i <= _ref : _i >= _ref; ind = 0 <= _ref ? ++_i : --_i) {
+  arg = process.argv[ind];
+  if (arg === '--port' || arg === '-p') {
+    console.log(process.argv[ind + 1]);
+    app.set('port', process.env.PORT || process.argv[ind + 1]);
+    portSet = true;
+  }
+}
+
+if (!portSet) {
+  app.set('port', process.env.PORT || 3000);
+}
 
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
